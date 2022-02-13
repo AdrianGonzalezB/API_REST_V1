@@ -71,9 +71,9 @@ public class Obra implements Serializable {
     public void setAUTOR(String AUTOR) {
         this.AUTOR = AUTOR;
     }
-    
-    
-    
-    
 
+    @Override
+    public String toString() {
+        return "Obra{" + "ID_OBRA=" + ID_OBRA + ", TITOL=" + TITOL + ", ANY=" + ANY + ", MODALITAT=" + MODALITAT + ", AUTOR=" + AUTOR + '}';
+    }
 }

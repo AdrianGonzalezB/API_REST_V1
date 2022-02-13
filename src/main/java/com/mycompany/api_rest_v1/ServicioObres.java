@@ -26,15 +26,28 @@ import javax.ws.rs.core.Response.Status;
 
 @Path("/obres")
 public class ServicioObres {
-    private static List<Obra> listaObres = new ArrayList<Obra>();
+    private static List<Obra> listaObres = new ArrayList<Obra>() {
+        {
+            add(new Obra(1,"Prueba","1956","Art","Yo"));
+            add(new Obra(2,"Prueba","1956","Art","Yo"));
+        }
+    };
     
+    /**
+     *
+     * @return devuelve una respuesta
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getObres() {
         return Response.ok(listaObres).build();
     }
     
-    
+    /**
+     *
+     * @param id pide el id a buscar de la obra
+     * @return devuelve una respuesta
+     */
     @GET
     @Path("/{ID_OBRA}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -53,12 +66,16 @@ public class ServicioObres {
         }
     }
 
-    
+    /**
+     *
+     * @param obraRequest pide la obra a crear
+     * @return devuelve una respuesta
+     */
     @POST
     @Path("/createObra")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response createUser(Obra obraRequest) {
+    public Response createObra(Obra obraRequest) {
  
         this.listaObres.add(obraRequest);
         //return Response.status(Status.CREATED).build();
@@ -66,33 +83,44 @@ public class ServicioObres {
  
     }
     
+    /**
+     *
+     * @param author pide el autor a buscar
+     * @return devuelve una respuesta
+     */
     @GET
     @Path("/name/{AUTOR}")// puesto /name/{autor} por que si no no respondia el servidor y daba error al haber 2 endpoint iguales
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getObraByAuthor(@PathParam("AUTOR") String author) {
-        Obra found = null;
+        ArrayList<Obra> founList = new ArrayList<>();
+        
         for (int i = 0; i < listaObres.size(); i++) {
             if (listaObres.get(i).getAUTOR().equals(author)) {
-                found = listaObres.get(i);
+                founList.add(listaObres.get(i));
+               
             }
         }
-        if (found == null) {
+        if (founList == null) {
             return Response.status(Status.BAD_REQUEST).entity("Author not found").build();
         } else {
-            return Response.ok(found).build();
+            return Response.ok(founList).build();
         }
     }
     
-    
+    /**
+     *
+     * @param obraUpdate pide la obra a actualizar
+     * @return devuelve una respuesta
+     */
     @PUT
     @Path("/updateObra")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response updateUser(Obra obraUpdate) {
+    public Response updateObra(Obra obraUpdate) {
         Obra found = null;
         for (int i = 0; i < listaObres.size(); i++) {
-            if (listaObres.get(i).getAUTOR().equalsIgnoreCase(obraUpdate.getAUTOR())) {
+            if (listaObres.get(i).getID_OBRA() == obraUpdate.getID_OBRA()) {
                 found = listaObres.get(i);
             }
         }
@@ -109,12 +137,15 @@ public class ServicioObres {
         }
     }
     
-    
-    
+    /**
+     *
+     * @param idObra pide el id de la obra a eliminar
+     * @return devuelve una respuesta 
+     */
     @DELETE
     @Path("/deleteObra/{ID_OBRA}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteUser(@PathParam("ID_OBRA") int idObra) {
+    public Response deleteObra(@PathParam("ID_OBRA") int idObra) {
         Obra found = null;
         for (int i = 0; i < listaObres.size(); i++) {
             if (listaObres.get(i).getID_OBRA() == idObra) {
